@@ -89,11 +89,12 @@ for k in range(player1.turns):
                 #demonlist[d].fragmentPointSequence = [1,2,3]
                 if(demonlist[d].fragmentTurns>1):
                     firstscores[d]=demonlist[d].fragmentPointSequence[0]
-        print(firstscores,"\n",firstscores.get)
-        demonindex= max(firstscores, key=firstscores.get)
-        player1.fightDemon(demonlist[demonindex])
-        demonlist[demonindex].consumed = True
-        player1.answersequence.append(demonindex)
+        if(firstscores!={}):
+            #print(firstscores,"\n",firstscores.get)
+            demonindex= max(firstscores, key=firstscores.get)
+            player1.fightDemon(demonlist[demonindex])
+            demonlist[demonindex].consumed = True
+            player1.answersequence.append(demonindex)
     elif(eligibledemoncount==1):
         for di in range(len(demons_eligible)):
             if(demons_eligible[di]==True):
