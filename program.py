@@ -35,14 +35,14 @@ class player:
     def fightDemon(self, demonn):
         demonn.consumed=True
         self.stamina-=demonn.staminaConsumed
-        if(demonn.staminaRecoveryTurns==1):
-            self.stamina+=demonn.staminaRecovered
-            demonn.staminaRecoveryTurns=0
-        else:
-            self.pendingStamina[demonn.staminaRecovered]= demonn.staminaRecoveryTurns
+        # if(demonn.staminaRecoveryTurns==1):
+        #     self.stamina+=demonn.staminaRecovered
+        #     demonn.staminaRecoveryTurns=0
+        #     print(self.stamina)
+        # else:
+        self.pendingStamina[demonn.staminaRecovered]= demonn.staminaRecoveryTurns
 
             
-
 
 
 with open("00-example.txt", "r") as file:
