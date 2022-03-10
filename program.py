@@ -1,7 +1,3 @@
-# from .player import player
-# from .demon import demon
-#from sqlalchemy import false, true
-
 
 class demon:
     def __init__(self, staminaConsumed, recoveryTurns, staminaRecovered, fragmentTurns, fragmentPoints):
@@ -29,12 +25,12 @@ class player:
         if(demonn.staminaConsumed <=self.stamina and demonn.consumed==False):
             return True
         else:
-            False
+            return False
 
     
     def fightDemon(self, demonn):
         demonn.consumed=True
-        self.stamina-=demonn.staminaConsumed
+        self.stamina -= demonn.staminaConsumed
         # if(demonn.staminaRecoveryTurns==1):
         #     self.stamina+=demonn.staminaRecovered
         #     demonn.staminaRecoveryTurns=0
@@ -42,10 +38,15 @@ class player:
         # else:
         self.pendingStamina[demonn.staminaRecovered]= demonn.staminaRecoveryTurns
 
-            
+    def eligibleStamina(self):
+        if(self.stamina<self.maxStamina):
+            return True
+        else:
+            return False
 
 
-with open("00-example.txt", "r") as file:
+
+with open("03-etheryum.txt", "r") as file:
     file_liness=file.readlines()
     file_lines=list()
     for i in file_liness:
@@ -62,11 +63,15 @@ for i in range(1, int(file_lines[0][3])+1):
 
 
 for k in range(player1.turns):
+    print(player1.pendingStamina)
     pendstamina = player1.pendingStamina.keys()
     for s in pendstamina:
-        if(player1.pendingStamina[s]==1):
-            player1.stamina+=s
-        player1.pendingStamina[s]-=1
+        if(player1.pendingStamina[s]>0):
+            if(player1.pendingStamina[s]==1):
+                if(player1.eligibleStamina()):
+                    player1.stamina+=s
+                    player1.pendingStamina[s]-=1
+            player1.pendingStamina[s]-=1
     print(player1.stamina)
     demons_eligible = list()
     for d in demonlist:
@@ -80,20 +85,30 @@ for k in range(player1.turns):
         firstscores=dict()
         for d in range(len(demons_eligible)):
             if(demons_eligible[d]==True):
-                firstscores[d]=demonlist[d].fragmentPointSequence[0]
+                #print(firstscores, "\n", demonlist[d].fragmentPointSequence, "\n" , demonlist[d].fragmentTurns)
+                #demonlist[d].fragmentPointSequence = [1,2,3]
+                if(demonlist[d].fragmentTurns>1):
+                    firstscores[d]=demonlist[d].fragmentPointSequence[0]
+        print(firstscores,"\n",firstscores.get)
         demonindex= max(firstscores, key=firstscores.get)
         player1.fightDemon(demonlist[demonindex])
+        demonlist[demonindex].consumed = True
         player1.answersequence.append(demonindex)
+    elif(eligibledemoncount==1):
+        for di in range(len(demons_eligible)):
+            if(demons_eligible[di]==True):
+                d_id=di
+        player1.fightDemon(demonlist[d_id])
+        player1.answersequence.append(d_id)
     else:
-        
-        for d in range(len(demons_eligible)):
-            if(demons_eligible[d]==True):
-                demonindex=d
-        player1.fightDemon(demonlist[demonindex])
-        player1.answersequence.append(demonindex)
+        pass
 
-            
-with open("ans00-example.tx" , "w") as answerfile:
+for t in range(len(demons_eligible)):
+    if(demonlist[t].consumed==False and demons_eligible[t]==False):
+        player1.answersequence.append(t)
+
+
+with open("ans03.txt" , "w") as answerfile:
     for answer in player1.answersequence:
         answerfile.write(str(answer) + "\n")
 
